@@ -53,10 +53,11 @@
         </div>
     </div>
 
-
-    <!-- 첨부파일 목록
+    <!-- 첨부파일 목록 -->
     <div class="card shadow-sm mb-4" th:if="${!files.isEmpty()}">
-        <div class="card-header"><i class="bi bi-paperclip"></i> 첨부파일</div>
+        <div class="card-header">
+            <i class="bi bi-paperclip"></i> 첨부파일
+        </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 th:each="file : ${files}">
@@ -69,7 +70,7 @@
             </li>
         </ul>
     </div>
-    -->
+
 
     <!-- 댓글 목록
     <div class="card shadow-sm mb-4">

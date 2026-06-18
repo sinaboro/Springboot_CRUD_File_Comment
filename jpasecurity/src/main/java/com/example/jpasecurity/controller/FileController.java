@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -87,5 +88,16 @@ public class FileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     } // download
+
+
+    //파일 삭제(게시글 수정화면에서 기존 파일 삭제
+    //http://localhost:8080/files/delete/4?boardId=270
+    @GetMapping("/files/delete/{fileId}")
+    public String deleteFile(@PathVariable Long fileId,
+                             @RequestParam Long boardId) throws  Exception{
+        fileService.deleteFile(fileId);
+
+        return "redirect:/board/edit/" + boardId;
+    }
 
 }
