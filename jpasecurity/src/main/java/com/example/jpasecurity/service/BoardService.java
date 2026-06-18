@@ -77,8 +77,7 @@ public class BoardService {
         board.update(dto.getTitle(), dto.getContent());
         // 추가 파일 업로드
         if (dto.getFiles() != null) {
-            ;
-//            fileService.saveFiles(dto.getFiles(), board);
+            fileService.saveFiles(dto.getFiles(), board);
         }
     }
 
