@@ -5,7 +5,6 @@ import com.example.jpasecurity.entity.Board;
 import com.example.jpasecurity.entity.Comment;
 import com.example.jpasecurity.entity.FileAttach;
 import com.example.jpasecurity.entity.JpaMember;
-import com.example.jpasecurity.repository.CommentRepository;
 import com.example.jpasecurity.repository.FileAttachRepository;
 import com.example.jpasecurity.service.BoardService;
 import com.example.jpasecurity.service.CommentService;
@@ -97,6 +96,7 @@ public class BoardController {
 
         List<Comment> comments = commentService.getComments(id);
 
+
         //fileAttachRepository.findById(id) --> jpa_file_attach 테이블 기본키로 조회
         List<FileAttach> files = fileAttachRepository.findByBoardId(id);// jpa_file_attach 테이블 외래키(board_id)로 조회
 
@@ -173,6 +173,37 @@ public class BoardController {
         boardService.delete(id);
         redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
         return "redirect:/board/list";
+    }
+
+
+    //댓글 등록
+    @PostMapping("/comment/{boardId}")
+    public String writeComment(@PathVariable Long boardId,
+                               @RequestParam String content,
+                               @AuthenticationPrincipal UserAccount userAccount){
+
+        commentService.write(boardId, content, userAccount.getJpaMember());
+
+        return "redirect:/board/view/" + boardId;
+    }
+
+
+    //댓글 삭제 - 본인 댓글만 삭제 가능
+    @GetMapping("/comment/delete/{commentId}")
+    public String deleteComment(@PathVariable Long commentId,
+                                @AuthenticationPrincipal UserAccount userAccount){
+
+        Comment comment = commentService.findById(commentId);
+
+        Long boardId = comment.getBoard().getId(); //게시글(주글)
+
+        //본인 확인
+        if(!comment.getMember().getId().equals(userAccount.getJpaMember().getId()))
+            return "redirect:/board/view/" + boardId+ "?error=forbidden";
+
+        commentService.delete(commentId);
+
+        return "redirect:/board/view/" + boardId;
     }
 
 

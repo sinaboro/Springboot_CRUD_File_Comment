@@ -50,5 +50,4 @@ class CommentRepositoryTest {
         commentRepository.findByBoardIdOrderByCreatedAtAsc(141L)
                 .forEach(comment -> log.info("comment : {}", comment.getContent()));
     }
-
 }
