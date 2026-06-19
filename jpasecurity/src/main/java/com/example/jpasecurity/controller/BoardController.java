@@ -2,10 +2,13 @@ package com.example.jpasecurity.controller;
 
 import com.example.jpasecurity.dto.BoardDto;
 import com.example.jpasecurity.entity.Board;
+import com.example.jpasecurity.entity.Comment;
 import com.example.jpasecurity.entity.FileAttach;
 import com.example.jpasecurity.entity.JpaMember;
+import com.example.jpasecurity.repository.CommentRepository;
 import com.example.jpasecurity.repository.FileAttachRepository;
 import com.example.jpasecurity.service.BoardService;
+import com.example.jpasecurity.service.CommentService;
 import com.example.jpasecurity.service.UserAccount;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final FileAttachRepository fileAttachRepository;
+    private final CommentService commentService;
 
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "0") int page,
@@ -90,11 +94,14 @@ public class BoardController {
                        Model model){
 
         Board board = boardService.getDetail(id); //조회수 증가 + 1
+
+        List<Comment> comments = commentService.getComments(id);
+
         //fileAttachRepository.findById(id) --> jpa_file_attach 테이블 기본키로 조회
         List<FileAttach> files = fileAttachRepository.findByBoardId(id);// jpa_file_attach 테이블 외래키(board_id)로 조회
 
         model.addAttribute("board", board);
-//        model.addAttribute("comments", null);
+        model.addAttribute("comments", comments);
         model.addAttribute("files", files);
 
         //현재 로그인 사용자 정보
